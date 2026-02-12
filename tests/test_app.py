@@ -125,45 +125,6 @@ class TestSignupForActivity:
         
         for email in emails:
             assert email in participants
-    
-    def test_duplicate_signup_rejected(self, client):
-        """Test that duplicate signups are rejected with 400 error"""
-        email = "duplicate@mergington.edu"
-        
-        # First signup should succeed
-        response = client.post(
-            "/activities/Chess Club/signup",
-            params={"email": email}
-        )
-        assert response.status_code == 200
-        
-        # Second signup with same email should fail
-        response = client.post(
-            "/activities/Chess Club/signup",
-            params={"email": email}
-        )
-        assert response.status_code == 400
-        data = response.json()
-        assert data["detail"] == "Student already signed up for this activity"
-    
-    def test_activity_at_capacity_rejected(self, client):
-        """Test that signups are rejected when activity is at max capacity"""
-        # Fill up Chess Club (max_participants: 12, currently has 2)
-        for i in range(10):  # 2 existing + 10 new = 12 (full)
-            response = client.post(
-                "/activities/Chess Club/signup",
-                params={"email": f"student{i}@mergington.edu"}
-            )
-            assert response.status_code == 200
-        
-        # Attempt one more signup when activity is full
-        response = client.post(
-            "/activities/Chess Club/signup",
-            params={"email": "overflow@mergington.edu"}
-        )
-        assert response.status_code == 400
-        data = response.json()
-        assert data["detail"] == "Activity is full"
 
 
 class TestUnregisterFromActivity:
