@@ -12,6 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Clear loading message
       activitiesList.innerHTML = "";
+      
+      // Clear activity select dropdown (keep only the placeholder option)
+      const placeholderOption = activitySelect.querySelector('option[value=""]');
+      activitySelect.innerHTML = "";
+      if (placeholderOption) {
+        activitySelect.appendChild(placeholderOption);
+      }
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
